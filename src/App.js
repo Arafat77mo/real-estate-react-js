@@ -10,6 +10,7 @@ import Chat from "./components/chat/Chat";
 import PropertyDetail from "./components/properties/PropertyDetail";
 import EditProperty from "./components/properties/EditProperty";
 import CreateProperty from "./components/properties/CreateProperty";
+import OwnerDashboard from "./components/dashboard/OwnerDashboard";
 
 function App() {
   return (
@@ -18,7 +19,6 @@ function App() {
           <Routes>
 
             <Route path="/login" element={<Login />} />
-            <Route path="/" element={<DashboardLayout/>}/>
             {/* 🔹 لوحة التحكم مع المسارات المحمية */}
               <Route
                   element={
@@ -27,9 +27,11 @@ function App() {
                       </PrivateRoute>
                   }
               >
+                  <Route path="/" element={<OwnerDashboard/>}/>
+
                   <Route path="/property/:id" element={<PropertyDetail />} />
                   <Route path="/edit-property/:id" element={<EditProperty />} />
-                  <Route path="/property" element={<CreateProperty />} />
+                  <Route path="/create-property" element={<CreateProperty />} />
                   <Route path="/properties" element={<PropertyList />} />
                   <Route path="/chat" element={<Chat />} />
               </Route>

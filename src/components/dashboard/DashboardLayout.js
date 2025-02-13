@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled, useTheme, createTheme, ThemeProvider } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -18,9 +18,8 @@ import Drawer from '@mui/material/Drawer';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {Outlet, useNavigate} from "react-router-dom";
-import {Apartment, Chat, Home, Logout} from "@mui/icons-material";
+import { Outlet, useNavigate } from 'react-router-dom';
+import { Apartment, Chat, Home, Logout } from '@mui/icons-material';
 
 const drawerWidth = 240;
 
@@ -74,12 +73,11 @@ export default function DashboardLayout() {
 
     const navigate = useNavigate();
 
-
     const menuItems = [
         { text: "الرئيسية", icon: <Home />, path: "/" },
         { text: "العقارات", icon: <Apartment />, path: "/properties" },
         { text: "المحادثات", icon: <Chat />, path: "/chat" },
-        { text: "تسجيل الخروج", icon: <Logout />, path: "/login" }
+        { text: "تسجيل الخروج", icon: <Logout />, path: "/login" },
     ];
 
     const drawer = (
@@ -128,11 +126,7 @@ export default function DashboardLayout() {
                                 <NotificationsIcon />
                             </Badge>
                         </IconButton>
-                        <IconButton
-                            edge="end"
-                            aria-label="account of current user"
-                            color="inherit"
-                        >
+                        <IconButton edge="end" aria-label="account of current user" color="inherit">
                             <AccountCircle />
                         </IconButton>
                     </Toolbar>
@@ -148,7 +142,7 @@ export default function DashboardLayout() {
                         open={mobileOpen}
                         onClose={handleDrawerToggle}
                         ModalProps={{
-                            keepMounted: true, // Better open performance on mobile.
+                            keepMounted: true, // أداء أفضل على الأجهزة المحمولة.
                         }}
                         sx={{
                             '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
@@ -172,11 +166,11 @@ export default function DashboardLayout() {
                     sx={{
                         flexGrow: 1,
                         p: 3,
-                        width: { sm: `calc(100% - ${drawerWidth}px)` }
+                        width: { sm: `calc(100% - ${drawerWidth}px)` },
                     }}
                 >
                     <Toolbar />
-                    {/* محتوى الصفحة الرئيسية هنا */}
+                    {/* يتم عرض المحتوى الفرعي هنا باستخدام Outlet */}
                     <Typography paragraph>
                         <Outlet />
                     </Typography>

@@ -11,6 +11,8 @@ const echo = new Echo({
     wsPort:8080,
     wssPort: 443 ?? 443,
     enabledTransports: ['ws', 'wss'],
+    forceTLS: ('http' ?? 'https') === 'https',
+
 
 });
 

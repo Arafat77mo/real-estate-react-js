@@ -64,17 +64,17 @@ const PropertyDetail = () => {
                     )}
                     <CardContent>
                         <Typography variant="h4" component="div" gutterBottom>
-                            {property.name.ar}
+                            {property.name_ar}
                         </Typography> <Typography variant="h4" component="div" gutterBottom>
-                        {property.name.en}
+                        {property.name_en}
                     </Typography>
                         <Typography variant="body1" color="text.secondary" gutterBottom>
                             السعر: {property.price} ريال
                         </Typography>
                         <Typography variant="body1" color="text.secondary" gutterBottom>
-                            الوصف: {property.description.ar}
+                            الوصف: {property.description_ar}
                         </Typography>  <Typography variant="body1" color="text.secondary" gutterBottom>
-                        الوصف: {property.description.en}
+                        الوصف: {property.description_en}
                     </Typography>
                         <Typography variant="body1" color="text.secondary" gutterBottom>
                             الموقع: {property.location}

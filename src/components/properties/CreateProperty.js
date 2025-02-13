@@ -32,6 +32,16 @@ const CreateProperty = () => {
         type: Yup.string().required('Type is required').oneOf(['apartment', 'villa', 'land', 'office', 'commercial'], 'Invalid type'),
         latitude: Yup.number().nullable().min(-90, 'Latitude must be between -90 and 90').max(90, 'Latitude must be between -90 and 90'),
         longitude: Yup.number().nullable().min(-180, 'Longitude must be between -180 and 180').max(180, 'Longitude must be between -180 and 180'),
+        property_images: Yup.array()
+            .nullable()
+            .test('fileType', 'Only JPEG and PNG images are allowed', (value) => {
+                if (!value) return true; // If no files are uploaded, skip validation
+                return value.every((file) => file.type === 'image/jpeg' || file.type === 'image/png');
+            })
+            .test('fileSize', 'File size must be less than 3MB', (value) => {
+                if (!value) return true; // If no files are uploaded, skip validation
+                return value.every((file) => file.size <= 3 * 1024 * 1024); // 3MB in bytes
+            }),
     });
 
     // Formik Form
@@ -49,14 +59,36 @@ const CreateProperty = () => {
             type: 'apartment',
             latitude: '',
             longitude: '',
+            property_images: [], // Initialize as an empty array
         },
         validationSchema,
         onSubmit: (values) => {
-            dispatch(createProperty(values)).then(() => {
+            const formData = new FormData();
+
+            // Append all form fields to FormData
+            Object.keys(values).forEach((key) => {
+                if (key === 'property_images') {
+                    values[key].forEach((file) => formData.append('property_images[]', file));
+                } else if (typeof values[key] === 'object') {
+                    Object.keys(values[key]).forEach((subKey) => {
+                        formData.append(`${key}[${subKey}]`, values[key][subKey]);
+                    });
+                } else {
+                    formData.append(key, values[key]);
+                }
+            });
+
+            dispatch(createProperty(formData)).then(() => {
                 navigate('/properties'); // Redirect to properties list after creation
             });
         },
     });
+
+    // Handle file input change
+    const handleFileChange = (event) => {
+        const files = Array.from(event.target.files); // Convert FileList to Array
+        formik.setFieldValue('property_images', files); // Update Formik state
+    };
 
     return (
         <Container sx={{ mt: 4 }}>
@@ -266,6 +298,20 @@ const CreateProperty = () => {
                             error={formik.touched.longitude && Boolean(formik.errors.longitude)}
                             helperText={formik.touched.longitude && formik.errors.longitude}
                         />
+                    </Grid>
+
+                    {/* Property Images */}
+                    <Grid item xs={12}>
+                        <input
+                            type="file"
+                            name="property_images"
+                            multiple
+                            onChange={handleFileChange}
+                            accept="image/jpeg, image/png"
+                        />
+                        {formik.touched.property_images && formik.errors.property_images && (
+                            <Typography color="error">{formik.errors.property_images}</Typography>
+                        )}
                     </Grid>
 
                     {/* Submit Button */}

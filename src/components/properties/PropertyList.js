@@ -2,8 +2,24 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProperties, deleteProperty } from '../../features/propertySlice';
 import {
-    Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
-    Pagination, TextField, CircularProgress, InputAdornment, IconButton, Menu, MenuItem, Box, Typography
+    Container,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+    Pagination,
+    TextField,
+    CircularProgress,
+    InputAdornment,
+    IconButton,
+    Menu,
+    MenuItem,
+    Box,
+    Typography,
+    Button,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -19,8 +35,8 @@ const PropertyList = () => {
 
     const [searchQuery, setSearchQuery] = useState('');
     const [page, setPage] = useState(1);
-    const [filterAnchorEl, setFilterAnchorEl] = useState(null); // State for filter menu
-    const [filters, setFilters] = useState({}); // State for column filters
+    const [filterAnchorEl, setFilterAnchorEl] = useState(null);
+    const [filters, setFilters] = useState({});
 
     useEffect(() => {
         dispatch(fetchProperties({ page, query: searchQuery, filters }));
@@ -28,108 +44,127 @@ const PropertyList = () => {
 
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
-        setPage(1); // Reset to first page on search
+        setPage(1);
     };
 
     const handleFilterClick = (event) => {
-        setFilterAnchorEl(event.currentTarget); // Open filter menu
+        setFilterAnchorEl(event.currentTarget);
     };
 
     const handleFilterClose = () => {
-        setFilterAnchorEl(null); // Close filter menu
+        setFilterAnchorEl(null);
     };
 
     const handleFilterChange = (column, value) => {
         setFilters((prevFilters) => ({ ...prevFilters, [column]: value }));
-        setPage(1); // Reset to first page on filter change
-        handleFilterClose(); // Close filter menu
+        setPage(1);
+        handleFilterClose();
     };
 
     const handleDelete = (id) => {
         if (window.confirm('هل أنت متأكد من حذف هذا العقار؟')) {
             dispatch(deleteProperty(id)).then(() => {
-                dispatch(fetchProperties({ page, query: searchQuery, filters })); // Refresh the list after deletion
+                dispatch(fetchProperties({ page, query: searchQuery, filters }));
             });
         }
     };
 
     const handleEdit = (id) => {
-        navigate(`/edit-property/${id}`); // Navigate to edit page
+        navigate(`/edit-property/${id}`);
     };
 
     const handleDetails = (id) => {
-        navigate(`/property/${id}`); // Navigate to details page
+        navigate(`/property/${id}`);
+    };
+
+    // دالة زر الإنشاء
+    const handleCreate = () => {
+        navigate('/create-property'); // توجه لصفحة إنشاء العقار
     };
 
     return (
         <Container sx={{ mt: 4 }}>
-            {/* 🔎 Search Bar */}
-            <TextField
-                label="ابحث عن عقار..."
-                variant="outlined"
-                fullWidth
-                sx={{ mb: 2 }}
-                value={searchQuery}
-                onChange={handleSearchChange}
-                InputProps={{
-                    endAdornment: (
-                        <InputAdornment position="end">
-                            <IconButton>
-                                <SearchIcon />
-                            </IconButton>
-                        </InputAdornment>
-                    ),
-                }}
-            />
+            {/* شريط البحث وزر الإنشاء */}
+            <Box display="flex" alignItems="center" mb={2}>
+                <TextField
+                    label="ابحث عن عقار..."
+                    variant="outlined"
+                    fullWidth
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton>
+                                    <SearchIcon />
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
+                    sx={{ mr: 2 }}
+                />
+                <Button variant="contained" color="primary" onClick={handleCreate}>
+                    إنشاء عقار
+                </Button>
+            </Box>
 
-            {/* 🛠️ Filter Button */}
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+            {/* زر الفلترة */}
+            <Box display="flex" justifyContent="flex-end" mb={2}>
                 <IconButton onClick={handleFilterClick}>
                     <FilterListIcon />
                 </IconButton>
-                <Menu
-                    anchorEl={filterAnchorEl}
-                    open={Boolean(filterAnchorEl)}
-                    onClose={handleFilterClose}
-                >
+                <Menu anchorEl={filterAnchorEl} open={Boolean(filterAnchorEl)} onClose={handleFilterClose}>
                     <MenuItem onClick={() => handleFilterChange('location', 'الرياض')}>الرياض</MenuItem>
                     <MenuItem onClick={() => handleFilterChange('location', 'جدة')}>جدة</MenuItem>
                     <MenuItem onClick={() => handleFilterChange('location', 'الدمام')}>الدمام</MenuItem>
                 </Menu>
             </Box>
 
-            {/* ⏳ Loading State */}
+            {/* حالة التحميل */}
             {status === 'loading' && <CircularProgress sx={{ display: 'block', margin: '20px auto' }} />}
 
-            {/* 📋 Property Table */}
-            <TableContainer component={Paper}>
+            {/* جدول العقارات */}
+            <TableContainer component={Paper} sx={{ boxShadow: 3, borderRadius: 2 }}>
                 <Table>
-                    <TableHead>
+                    <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
                         <TableRow>
-                            <TableCell>الصورة</TableCell>
-                            <TableCell>العنوان</TableCell>
-                            <TableCell>السعر</TableCell>
-                            <TableCell>الموقع</TableCell>
-                            <TableCell>الإجراءات</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>الصورة</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>العنوان</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>السعر</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>الموقع</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', textAlign: 'center' }}>الإجراءات</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {properties.map((property) => (
-                            <TableRow key={property.id}>
+                            <TableRow key={property.id} hover>
                                 <TableCell>
-                                    <img src={property.cover_image_url} alt={property.title} width="80" height="50" />
+                                    <img
+                                        src={property.cover_image_url}
+                                        alt={property.title}
+                                        style={{
+                                            width: '80px',
+                                            height: '50px',
+                                            objectFit: 'cover',
+                                            borderRadius: '4px',
+                                        }}
+                                    />
                                 </TableCell>
-                                <TableCell>{property.name}</TableCell>
+                                <TableCell>
+                                    <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
+                                        {property.name}
+                                    </Typography>
+                                </TableCell>
                                 <TableCell>{property.price} ريال</TableCell>
                                 <TableCell>{property.location}</TableCell>
-                                <TableCell>
-                                    <IconButton onClick={() => handleDetails(property.id)}>
+                                <TableCell align="center">
+                                    <IconButton onClick={() => handleDetails(property.id)} size="small">
                                         <VisibilityIcon color="primary" />
                                     </IconButton>
-                                    <IconButton onClick={() => handleEdit(property.id)}>
+                                    <IconButton onClick={() => handleEdit(property.id)} size="small">
                                         <EditIcon color="secondary" />
                                     </IconButton>
-                                    <IconButton onClick={() => handleDelete(property.id)}>
+                                    <IconButton onClick={() => handleDelete(property.id)} size="small">
                                         <DeleteIcon color="error" />
                                     </IconButton>
                                 </TableCell>
@@ -139,13 +174,15 @@ const PropertyList = () => {
                 </Table>
             </TableContainer>
 
-            {/* 📑 Pagination */}
-            <Pagination
-                count={totalPages}
-                page={currentPage}
-                onChange={(e, value) => setPage(value)}
-                sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}
-            />
+            {/* ترقيم الصفحات */}
+            <Box display="flex" justifyContent="center" mt={2}>
+                <Pagination
+                    count={totalPages}
+                    page={currentPage}
+                    onChange={(e, value) => setPage(value)}
+                    sx={{ mb: 2 }}
+                />
+            </Box>
         </Container>
     );
 };
