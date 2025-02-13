@@ -24,7 +24,7 @@ const Login = () => {
                 token: response.data.data.token,
             }));
 
-            navigate("/properties");
+            navigate("/");
         } catch (error) {
             setError(error.response?.data?.message || "فشل تسجيل الدخول");
         }

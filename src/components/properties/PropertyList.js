@@ -19,7 +19,7 @@ import {
     MenuItem,
     Box,
     Typography,
-    Button,
+    Button, Grid,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -83,7 +83,7 @@ const PropertyList = () => {
     };
 
     return (
-        <Container sx={{ mt: 4 }}>
+        <Grid>
             {/* شريط البحث وزر الإنشاء */}
             <Box display="flex" alignItems="center" mb={2}>
                 <TextField
@@ -183,7 +183,8 @@ const PropertyList = () => {
                     sx={{ mb: 2 }}
                 />
             </Box>
-        </Container>
+        </Grid>
+
     );
 };
 

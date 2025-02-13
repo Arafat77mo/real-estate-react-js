@@ -1,32 +1,36 @@
 import * as React from 'react';
-import { styled, useTheme, createTheme, ThemeProvider } from '@mui/material/styles';
-import MuiAppBar from '@mui/material/AppBar';
+import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Drawer from '@mui/material/Drawer';
-import Badge from '@mui/material/Badge';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import AccountCircle from '@mui/icons-material/AccountCircle';
+import MenuIcon from '@mui/icons-material/Menu';
+import HomeIcon from '@mui/icons-material/Home';
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import PeopleIcon from '@mui/icons-material/People';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import SettingsIcon from '@mui/icons-material/Settings';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { Apartment, Chat, Home, Logout } from '@mui/icons-material';
+import {Chat} from "@mui/icons-material";
 
 const drawerWidth = 240;
 
-const AppBar = styled(MuiAppBar, {
+// إنشاء AppBar مُخصص
+const MyAppBar = styled(AppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
     zIndex: theme.zIndex.drawer + 1,
+    background: 'linear-gradient(45deg, #1976d2, #42a5f5)',
     transition: theme.transitions.create(['width', 'margin'], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
@@ -41,139 +45,115 @@ const AppBar = styled(MuiAppBar, {
     }),
 }));
 
-const theme = createTheme({
+// إنشاء موضوع مخصص
+const mdTheme = createTheme({
     palette: {
-        primary: {
-            main: '#1a237e',
-        },
-        secondary: {
-            main: '#f50057',
-        },
+        primary: { main: '#1976d2' },
+        secondary: { main: '#ff4081' },
+        background: { default: '#f4f6f8' },
     },
     typography: {
-        fontFamily: 'Roboto, sans-serif',
+        fontFamily: '"Roboto", sans-serif',
     },
 });
 
 export default function DashboardLayout() {
     const [open, setOpen] = React.useState(true);
-    const [mobileOpen, setMobileOpen] = React.useState(false);
-
-    const handleDrawerToggle = () => {
-        setMobileOpen(!mobileOpen);
-    };
-
-    const handleDrawerOpen = () => {
-        setOpen(true);
-    };
-
-    const handleDrawerClose = () => {
-        setOpen(false);
-    };
-
     const navigate = useNavigate();
 
+    const toggleDrawer = () => {
+        setOpen(!open);
+    };
+
     const menuItems = [
-        { text: "الرئيسية", icon: <Home />, path: "/" },
-        { text: "العقارات", icon: <Apartment />, path: "/properties" },
+        { text: 'الرئيسية', icon: <HomeIcon />, path: '/' },
+        { text: 'العقارات', icon: <ApartmentIcon />, path: '/properties' },
+        { text: 'المستأجرين', icon: <PeopleIcon />, path: '/tenants' },
         { text: "المحادثات", icon: <Chat />, path: "/chat" },
-        { text: "تسجيل الخروج", icon: <Logout />, path: "/login" },
+        { text: 'التقارير', icon: <BarChartIcon />, path: '/reports' },
+        { text: 'الإعدادات', icon: <SettingsIcon />, path: '/settings' },
+        { text: 'تسجيل الخروج', icon: <LogoutIcon />, path: '/logout' },
     ];
 
-    const drawer = (
-        <div>
-            <Toolbar sx={{ justifyContent: 'space-between' }}>
-                <Typography variant="h6" noWrap component="div">
-                    Dashboard
-                </Typography>
-                <IconButton onClick={handleDrawerClose}>
-                    {useTheme().direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-                </IconButton>
-            </Toolbar>
-            <Divider />
-            <List>
-                {menuItems.map((item, index) => (
-                    <ListItem key={index} disablePadding>
-                        <ListItemButton onClick={() => navigate(item.path)}>
-                            <ListItemIcon>{item.icon}</ListItemIcon>
-                            <ListItemText primary={item.text} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-        </div>
-    );
-
     return (
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={mdTheme}>
             <Box sx={{ display: 'flex' }}>
-                <AppBar position="fixed" open={open}>
+                <CssBaseline />
+                <MyAppBar position="fixed" open={open}>
                     <Toolbar>
                         <IconButton
                             color="inherit"
-                            aria-label="open drawer"
-                            onClick={handleDrawerToggle}
                             edge="start"
+                            onClick={toggleDrawer}
                             sx={{ mr: 2 }}
                         >
                             <MenuIcon />
                         </IconButton>
                         <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-                            لوحة التحكم
+                            إدارة العقارات
                         </Typography>
-                        <IconButton color="inherit">
-                            <Badge badgeContent={4} color="secondary">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton>
-                        <IconButton edge="end" aria-label="account of current user" color="inherit">
-                            <AccountCircle />
-                        </IconButton>
                     </Toolbar>
-                </AppBar>
-
-                <Box
-                    component="nav"
-                    sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-                    aria-label="mailbox folders"
+                </MyAppBar>
+                <Drawer
+                    variant="permanent"
+                    open={open}
+                    sx={{
+                        width: open ? drawerWidth : 60,
+                        flexShrink: 0,
+                        '& .MuiDrawer-paper': {
+                            width: open ? drawerWidth : 60,
+                            boxSizing: 'border-box',
+                            backgroundColor: '#263238',
+                            color: '#fff',
+                            transition: mdTheme.transitions.create('width', {
+                                easing: mdTheme.transitions.easing.sharp,
+                                duration: mdTheme.transitions.duration.enteringScreen,
+                            }),
+                        },
+                    }}
                 >
-                    <Drawer
-                        variant="temporary"
-                        open={mobileOpen}
-                        onClose={handleDrawerToggle}
-                        ModalProps={{
-                            keepMounted: true, // أداء أفضل على الأجهزة المحمولة.
-                        }}
-                        sx={{
-                            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-                        }}
-                    >
-                        {drawer}
-                    </Drawer>
-                    <Drawer
-                        variant="permanent"
-                        sx={{
-                            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-                        }}
-                        open={open}
-                    >
-                        {drawer}
-                    </Drawer>
-                </Box>
-
+                    <Toolbar />
+                    <Divider />
+                    <List>
+                        {menuItems.map((item, index) => (
+                            <ListItem key={index} disablePadding>
+                                <ListItemButton
+                                    onClick={() => navigate(item.path)}
+                                    sx={{
+                                        minHeight: 48,
+                                        justifyContent: open ? 'initial' : 'center',
+                                        px: 2.5,
+                                    }}
+                                >
+                                    <ListItemIcon
+                                        sx={{
+                                            minWidth: 0,
+                                            mr: open ? 3 : 'auto',
+                                            justifyContent: 'center',
+                                            color: '#fff',
+                                        }}
+                                    >
+                                        {item.icon}
+                                    </ListItemIcon>
+                                    {open && (
+                                        <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
+                                    )}
+                                </ListItemButton>
+                            </ListItem>
+                        ))}
+                    </List>
+                </Drawer>
                 <Box
                     component="main"
                     sx={{
                         flexGrow: 1,
                         p: 3,
-                        width: { sm: `calc(100% - ${drawerWidth}px)` },
+                        backgroundColor: mdTheme.palette.background.default,
+                        minHeight: '100vh',
                     }}
                 >
                     <Toolbar />
-                    {/* يتم عرض المحتوى الفرعي هنا باستخدام Outlet */}
-                    <Typography paragraph>
-                        <Outlet />
-                    </Typography>
+                    <Outlet />
                 </Box>
             </Box>
         </ThemeProvider>

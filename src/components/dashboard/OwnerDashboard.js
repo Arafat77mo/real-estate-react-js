@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDashboardAnalytics } from '../../features/dashboardslice';
 import {
-    Container,
     Grid,
     Paper,
     Typography,
@@ -88,7 +87,7 @@ const OwnerDashboard = () => {
     ];
 
     return (
-        <Container sx={{ mt: 4 }}>
+        <Grid>
             <Typography variant="h4" gutterBottom>
                 لوحة تحكم المالك
             </Typography>
@@ -196,7 +195,7 @@ const OwnerDashboard = () => {
                     </Paper>
                 </Grid>
             </Grid>
-        </Container>
+        </Grid>
     );
 };
 

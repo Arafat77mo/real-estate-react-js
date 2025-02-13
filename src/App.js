@@ -11,6 +11,7 @@ import PropertyDetail from "./components/properties/PropertyDetail";
 import EditProperty from "./components/properties/EditProperty";
 import CreateProperty from "./components/properties/CreateProperty";
 import OwnerDashboard from "./components/dashboard/OwnerDashboard";
+import ReportDashboard from "./components/report/ReportDashboard";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
               >
                   <Route path="/" element={<OwnerDashboard/>}/>
 
+                  <Route path="/reports" element={<ReportDashboard />} />
                   <Route path="/property/:id" element={<PropertyDetail />} />
                   <Route path="/edit-property/:id" element={<EditProperty />} />
                   <Route path="/create-property" element={<CreateProperty />} />

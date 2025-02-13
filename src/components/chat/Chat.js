@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Grid, Paper, Typography, Box } from '@mui/material';
+import {  Grid, Paper, Typography, Box } from '@mui/material';
 import ChatMessages from "../ChatMessages";
 import ChatThreads from "../ChatThreads";
 
@@ -8,7 +8,7 @@ const Chat = () => {
     console.log(selectedThread);
 
     return (
-        <Container maxWidth="lg" sx={{ mt: 4, height: '110vh' }}>
+        <Grid maxWidth="lg" sx={{ mt: 4, height: '110vh' }}>
             <Paper
                 sx={{
                     height: '100%',
@@ -66,7 +66,7 @@ const Chat = () => {
                     </Grid>
                 </Grid>
             </Paper>
-        </Container>
+        </Grid>
     );
 };
 
