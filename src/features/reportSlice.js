@@ -41,12 +41,38 @@ export const fetchInstallmentsReport = createAsyncThunk(
     }
 );
 
+export const fetchRenterDetails = createAsyncThunk(
+    'report/fetchRenterDetails',
+    async ({ userId, propertyId }, { rejectWithValue }) => { // استخدم كائنًا
+        try {
+            const response = await api.get(`/api/reports/renter/${userId}/${propertyId}`);
+            return response.data.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+export const fetchInstallmentDetails = createAsyncThunk(
+    'report/fetchInstallmentDetails',
+    async ({ userId, propertyId }, { rejectWithValue }) => { // استخدم كائنًا
+        try {
+            const response = await api.get(`/api/reports/installment/${userId}/${propertyId}`);
+            return response.data.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data.data);
+        }
+    }
+);
+
 const reportSlice = createSlice({
     name: 'report',
     initialState: {
         buyers: null,
         renters: null,
         installments: null,
+        renter: null,
+        installment: null,
         status: 'idle',
         error: null,
     },
@@ -54,7 +80,9 @@ const reportSlice = createSlice({
         clearReports: (state) => {
             state.buyers = null;
             state.renters = null;
+            state.renter = null;
             state.installments = null;
+            state.installment = null;
             state.status = 'idle';
             state.error = null;
         },
@@ -96,7 +124,15 @@ const reportSlice = createSlice({
             .addCase(fetchInstallmentsReport.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload || action.error.message;
-            });
+            })
+            .addCase(fetchInstallmentDetails.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.installment = action.payload;
+            })
+            .addCase(fetchRenterDetails.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.renter = action.payload;
+            })
     },
 });
 
