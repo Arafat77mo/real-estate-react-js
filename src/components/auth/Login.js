@@ -1,16 +1,23 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Box, TextField, Button, Paper, Typography } from "@mui/material";
+import {
+    Box, TextField, Button, Paper, Typography,
+    Divider, Stack
+} from "@mui/material";
+import GoogleIcon from "@mui/icons-material/Google";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import Github from "@mui/icons-material/GitHub";
 import api from "../../api/axios";
 import { setCredentials } from "../../features/authSlice";
-
 const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [provider, setProvider] = useState(null);
+    const [loginUrl, setLoginUrl] = useState(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -29,6 +36,31 @@ const Login = () => {
             setError(error.response?.data?.message || "فشل تسجيل الدخول");
         }
     };
+
+    // In your root component (App.jsx)
+
+
+    useEffect(() => {
+        if (provider) {
+            window.location.href = `http://127.0.0.1:8000/api/login/${provider}`;
+        }
+    }, [provider]);
+
+    function handleSocialLogin(provider) {
+        setProvider(provider);
+    }
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(window.location.search);
+        const token = queryParams.get('token');
+        if (token) {
+            // تخزين التوكن (يمكنك أيضًا جلب بيانات المستخدم في هذه المرحلة)
+            dispatch(setCredentials({ token }));
+            // إعادة التوجيه للصفحة الرئيسية أو أي صفحة أخرى
+            navigate("/");
+        }
+    }, [dispatch, navigate]);
+
 
     return (
         <Box
@@ -91,6 +123,44 @@ const Login = () => {
                         تسجيل الدخول
                     </Button>
                 </form>
+
+                <Divider sx={{ my: 3 }}>أو</Divider>
+
+                <Stack spacing={2}>
+                    <Button
+                        onClick={() => handleSocialLogin("google")}
+
+                        variant="outlined"
+                        fullWidth
+                        startIcon={<GoogleIcon />}
+                        href={loginUrl}  // Laravel social route
+                        sx={{ textTransform: 'none' }}
+                    >
+                        تسجيل الدخول باستخدام Google
+                    </Button>
+                    <Button
+                        onClick={() => handleSocialLogin("facebook")}
+
+                        variant="outlined"
+                        fullWidth
+                        startIcon={<FacebookIcon />}
+                        href={loginUrl}  // Laravel social route
+                        sx={{ textTransform: 'none' }}
+                    >
+                        تسجيل الدخول باستخدام Facebook
+                    </Button>
+                    <Button
+                        onClick={() => handleSocialLogin("github")}
+
+                        variant="outlined"
+                        fullWidth
+                        startIcon={<Github />}
+                        href={loginUrl}  // Laravel social route
+                        sx={{ textTransform: 'none' }}
+                    >
+                        تسجيل الدخول باستخدام GitHub
+                    </Button>
+                </Stack>
             </Paper>
         </Box>
     );
